@@ -9,6 +9,7 @@ The mRALE Mastermind Challenge aimed to develop an AI/machine learning model cap
 ## Install the dependencies:
 
 conda env create --file environment.yml
+conda activate mrale
 
 ## Train the model:
 
