@@ -6,11 +6,12 @@ The mRALE Mastermind Challenge aimed to develop an AI/machine learning model cap
 
 ## Repository Structure
 
+
 ## Install the dependencies:
 
-'conda env create --file environment.yml'
+`conda env create --file environment.yml`
 
-'conda activate mrale'
+`conda activate mrale`
 
 ## Train the model:
 
