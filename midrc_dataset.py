@@ -25,7 +25,6 @@ class midrc_challenge_dataset(Dataset):
         self.annotations = pd.read_csv(annotation_path)
 
         self.file_paths = []
-        self
         for image_name in os.listdir(self.data_dir):
             if image_name in fp_list:
                 self.file_paths.append(os.path.join(self.data_dir, image_name))
@@ -37,7 +36,6 @@ class midrc_challenge_dataset(Dataset):
     def __getitem__(self, idx):
         fp = self.file_paths[idx]
 
-        #print(os.path.basename(fp))
         fn, ext = os.path.splitext(os.path.basename(fp))
         pid, studyid, seriesid, sopid  = fn.split('_')
         score = self.annotations[self.annotations['StudyInstanceUID'] == studyid]['mRALE Score'].iloc[-1]
@@ -73,7 +71,7 @@ class midrc_challenge_dicom(Dataset):
 
         self.labels = []
         ds = pydicom.dcmread(fp)
-        image = Image.fromarray(ds.pixel_array.astype(np.float32) / 255.0) #Convert to float!
+        image = Image.fromarray(ds.pixel_array) #Convert to float!
         suid = ds.StudyInstanceUID
         score = self.annotations[self.annotations['StudyInstanceUID'] == suid]['mRALE Score']
         score = 0
