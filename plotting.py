@@ -172,3 +172,26 @@ def plot_ds_stats(dataset):
     plt.savefig('hist_images.png')
     plt.show()
 
+def plot_train_metrics(folds, saved_metrics):
+    for f_i,fold in enumerate(folds):
+        fold_metrics = saved_metrics[f_i]
+
+        plt.figure(figsize=(12,8))
+        plt.title("Losses for Fold: "+ str(f_i+1))
+        plt.plot([fold_metrics[epoch]['avg_loss'] for epoch in fold_metrics], label='train_loss')
+        plt.plot([fold_metrics[epoch]['avg_vloss'] for epoch in fold_metrics],label='val_loss')
+        plt.legend()
+        plt.xlabel("Epochs")
+        filename = os.path.join("plots",str(f_i+1)+'_losses.png')
+        plt.savefig(filename)
+        plt.show()
+
+        plt.figure(figsize=(12,8))
+        plt.title("Kappas for Fold: "+ str(f_i+1))
+        plt.plot([fold_metrics[epoch]['avg_train_kappa'] for epoch in fold_metrics], label='train_kappa')
+        plt.plot([fold_metrics[epoch]['avg_val_kappa'] for epoch in fold_metrics],label='val_kappa')
+        plt.legend()
+        plt.xlabel("Epochs")
+        filename = os.path.join("plots",str(f_i+1)+'_kappas.png')
+        plt.savefig(filename)
+        plt.show()
