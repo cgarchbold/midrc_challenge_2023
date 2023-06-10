@@ -175,11 +175,12 @@ def plot_ds_stats(dataset):
 def plot_train_metrics(folds, saved_metrics, ex_directory):
     for f_i,fold in enumerate(folds):
         fold_metrics = saved_metrics[f_i]
+        fold_number = f_i+1
 
         plt.figure(figsize=(12,8))
         plt.title("Losses for Fold: "+ str(f_i+1))
-        plt.plot([fold_metrics[epoch]['avg_loss'] for epoch in fold_metrics], label='train_loss')
-        plt.plot([fold_metrics[epoch]['avg_vloss'] for epoch in fold_metrics],label='val_loss')
+        plt.plot([fold_metrics[epoch][f'Fold {fold_number} avg_loss'] for epoch in fold_metrics], label='train_loss')
+        plt.plot([fold_metrics[epoch][f'Fold {fold_number} avg_vloss'] for epoch in fold_metrics],label='val_loss')
         plt.legend()
         plt.xlabel("Epochs")
         filename = os.path.join(ex_directory,"plots",str(f_i+1)+'_losses.png')
@@ -187,8 +188,8 @@ def plot_train_metrics(folds, saved_metrics, ex_directory):
 
         plt.figure(figsize=(12,8))
         plt.title("Kappas for Fold: "+ str(f_i+1))
-        plt.plot([fold_metrics[epoch]['avg_train_kappa'] for epoch in fold_metrics], label='train_kappa')
-        plt.plot([fold_metrics[epoch]['avg_val_kappa'] for epoch in fold_metrics],label='val_kappa')
+        plt.plot([fold_metrics[epoch][f'Fold {fold_number} avg_train_kappa'] for epoch in fold_metrics], label='train_kappa')
+        plt.plot([fold_metrics[epoch][f'Fold {fold_number} avg_val_kappa'] for epoch in fold_metrics],label='val_kappa')
         plt.legend()
         plt.xlabel("Epochs")
         filename = os.path.join(ex_directory,'plots',str(f_i+1)+'_kappas.png')

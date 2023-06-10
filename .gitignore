@@ -1,4 +1,5 @@
 /plots
 /organized
 /experiments
+/wandb
 __pycache__

@@ -9,6 +9,7 @@ from plotting import plot_train_metrics
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import pickle
+import wandb
 
 '''
     Train on 1 fold (1 dataset) with the input settings
@@ -89,11 +90,14 @@ def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, f
         
         print('LOSS train {} valid {}, Kappa train {} valid {}'.format(avg_loss,avg_vloss,avg_train_kappa,avg_val_kappa))
         metrics[e] = {      
-            'avg_loss': avg_loss.item(),
-            'avg_vloss': avg_vloss.item(),
-            'avg_train_kappa': avg_train_kappa,
-            'avg_val_kappa': avg_val_kappa
-        }   
+            f'Fold {fold_number} avg_loss': avg_loss.item(),
+            f'Fold {fold_number} avg_vloss': avg_vloss.item(),
+            f'Fold {fold_number} avg_train_kappa': avg_train_kappa,
+            f'Fold {fold_number} avg_val_kappa': avg_val_kappa,
+            f'Fold {fold_number} epoch': e
+        }
+        if config['wandb']==True:
+            wandb.log(metrics[e])
 
         # Track best performance, and save the model's state
         if avg_vloss < best_vloss:
@@ -108,6 +112,16 @@ def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, f
     Trains all folds in the dataset.
 '''
 def train_folds():
+
+    if config['wandb']==True:   
+        wandb.init(
+        group=config['model'],
+        name=config['experiment_name'],
+        # set the wandb project where this run will be logged
+        project="midrc-challenge-2023",
+        # track hyperparameters and run metadata
+        config=config
+    )
 
     folds = cross_fold.create_folded_datasets("../data/resized_224X224/label_info/labels.json")
 
