@@ -79,3 +79,7 @@ def test_folds():
 
         #TODO: Save to file instead, save as dict?
         print("Fold: ",f_i+1, " MAE:", avg_mae.item() , " RMSE: ", avg_rmse.item(), " sMAPE: ", avg_smape.item(), " Kappa: ", kappa)
+
+
+if __name__ == "__main__":
+    test_folds()
