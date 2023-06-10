@@ -6,6 +6,8 @@ The mRALE Mastermind Challenge aimed to develop an AI/machine learning model cap
 
 ## Repository Structure
 
+`\models`
+-Contains code for various cnn models
 
 ## Install the dependencies:
 
@@ -15,5 +17,15 @@ The mRALE Mastermind Challenge aimed to develop an AI/machine learning model cap
 
 ## Train the model:
 
+Modify the config in config.py to set up experiment
+
+`python train.py`
+
+Trained models are saved to `\experiments\(experiment_name)\saved_models`
+Train plots are saved to `\experiments\(experiment_name)\plots`
+
 ## Evaluate the model:
 
+`python test.py`
+
+Results are saved to `\experiments\(experiment_name)\`

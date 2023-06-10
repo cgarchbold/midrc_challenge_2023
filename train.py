@@ -4,9 +4,11 @@ import cross_fold
 from get_model import create_model
 from sklearn.metrics import cohen_kappa_score
 from midrc_dataset import midrc_challenge_dataset
-import config
+from config import config
+from plotting import plot_train_metrics
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
+import pickle
 
 '''
     Train on 1 fold (1 dataset) with the input settings
@@ -96,7 +98,7 @@ def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, f
         # Track best performance, and save the model's state
         if avg_vloss < best_vloss:
             best_vloss = avg_vloss
-            model_path = os.path.join('models','modelsave_fold_{}'.format(fold_number))
+            model_path = os.path.join('experiments',config['experiment_name'],'saved_models', 'modelsave_fold_{}'.format(fold_number))
             torch.save(model.state_dict(), model_path)
 
     return metrics
@@ -112,6 +114,18 @@ def train_folds():
     root_dir = config['root_dir']
 
     annotations_file = config['annotations_path']
+
+    ex_directory = os.path.join('experiments',config['experiment_name'])
+    if not os.path.exists(ex_directory):
+        os.makedirs(ex_directory)
+
+    models_directory = os.path.join(ex_directory,'saved_models')
+    if not os.path.exists(models_directory):
+        os.makedirs(models_directory)
+
+    plots_directory = os.path.join(ex_directory,'plots')
+    if not os.path.exists(plots_directory):
+        os.makedirs(plots_directory)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -138,8 +152,10 @@ def train_folds():
         model = create_model(config=config)
         model.to(device)
 
-        optimizer = torch.optim.Adam(model.parameters())
+        # TODO: Choose optimizer in config
+        optimizer = torch.optim.Adam(model.parameters(), lr = config['learning_rate'])
 
+        # TODO: Choose loss in config
         criterion = torch.nn.MSELoss()
 
         train_dataset = midrc_challenge_dataset(root_dir, annotations_file, transform, fp_list = train_list)
@@ -151,3 +167,12 @@ def train_folds():
         #Training per fold
         metrics = train(config['epochs'],model,device,train_loader,val_loader, criterion, optimizer, f_i)
         saved_metrics.append(metrics)
+
+    plot_train_metrics(folds, saved_metrics, ex_directory)
+    fp = os.path.join(ex_directory,"train_metrics.pkl")
+    with open(fp, "wb") as file:
+        pickle.dump(saved_metrics, file)
+
+
+if __name__ == "__main__":
+    train_folds()

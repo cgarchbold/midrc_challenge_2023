@@ -58,6 +58,8 @@ def test_folds():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     val_transform = transforms.Compose([transforms.ToTensor()])
+
+    ex_directory = os.path.join('experiments',config['experiment_name'])
     
     #Testing Loop
     for f_i,fold in enumerate(folds):
