@@ -1,10 +1,11 @@
 config={
     'wandb': True,
-    'experiment_name': 'wandb_test', # Must be an acceptable directory name!
+    'experiment_name': 'ResNet-50, Augment w/o cropping', # Must be an acceptable directory name!
     'model':'ResNet-50',
     'imgnet_pretrained':True,
-    'epochs':3,
-    'augment' : False,
+    'epochs':50,
+    'augment' : True,
+    'cropping_augmentation':False,
     'batch_size': 16,
     'learning_rate': 0.001,
     'root_dir': '../data/resized_224X224',

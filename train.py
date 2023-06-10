@@ -115,6 +115,7 @@ def train_folds():
 
     if config['wandb']==True:   
         wandb.init(
+        entity='chill-cga',
         group=config['model'],
         name=config['experiment_name'],
         # set the wandb project where this run will be logged
@@ -144,12 +145,19 @@ def train_folds():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     if config['augment']:
-        transform = transforms.Compose([
-            transforms.RandomRotation(20),                           # Randomly rotate the image within -20 to +20 degrees
-            transforms.RandomResizedCrop(size=224, scale=(0.8, 1.0)),# Randomly crop and resize the image to 224x224 pixels
-            transforms.RandomHorizontalFlip(0.1),                       # Randomly flip the image horizontally
-            transforms.ToTensor()
-        ])
+        if config['cropping_augmentation']==True:
+            transform = transforms.Compose([
+                transforms.RandomRotation(20),                           # Randomly rotate the image within -20 to +20 degrees
+                transforms.RandomResizedCrop(size=224, scale=(0.8, 1.0)),# Randomly crop and resize the image to 224x224 pixels
+                transforms.RandomHorizontalFlip(0.1),                       # Randomly flip the image horizontally
+                transforms.ToTensor()
+            ])
+        elif config['cropping_augmentation']==False:
+            transform = transforms.Compose([
+                transforms.RandomRotation(20),                           # Randomly rotate the image within -20 to +20 degrees
+                transforms.RandomHorizontalFlip(0.1),                       # Randomly flip the image horizontally
+                transforms.ToTensor()
+            ])
     else:
         transform = transforms.Compose([
             transforms.ToTensor(),
@@ -179,7 +187,7 @@ def train_folds():
         val_loader = DataLoader(val_dataset, batch_size = config['batch_size'], shuffle=True)
 
         #Training per fold
-        metrics = train(config['epochs'],model,device,train_loader,val_loader, criterion, optimizer, f_i)
+        metrics = train(config['epochs'],model,device,train_loader,val_loader, criterion, optimizer, f_i+1) # Folds will be started from 1 instead of 0
         saved_metrics.append(metrics)
 
     plot_train_metrics(folds, saved_metrics, ex_directory)
