@@ -179,8 +179,8 @@ def plot_train_metrics(folds, saved_metrics, ex_directory):
 
         plt.figure(figsize=(12,8))
         plt.title("Losses for Fold: "+ str(f_i+1))
-        plt.plot([fold_metrics[epoch][f'Fold {fold_number} avg_loss'] for epoch in fold_metrics], label='train_loss')
-        plt.plot([fold_metrics[epoch][f'Fold {fold_number} avg_vloss'] for epoch in fold_metrics],label='val_loss')
+        plt.plot([fold_metrics[epoch][f'Fold {fold_number} avg_train_loss'] for epoch in fold_metrics], label='train_loss')
+        plt.plot([fold_metrics[epoch][f'Fold {fold_number} avg_val_loss'] for epoch in fold_metrics],label='val_loss')
         plt.legend()
         plt.xlabel("Epochs")
         filename = os.path.join(ex_directory,"plots",str(f_i+1)+'_losses.png')

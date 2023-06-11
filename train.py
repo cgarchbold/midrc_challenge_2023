@@ -10,6 +10,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import pickle
 import wandb
+import statistics as stat
 
 '''
     Train on 1 fold (1 dataset) with the input settings
@@ -90,8 +91,8 @@ def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, f
         
         print('LOSS train {} valid {}, Kappa train {} valid {}'.format(avg_loss,avg_vloss,avg_train_kappa,avg_val_kappa))
         metrics[e] = {      
-            f'Fold {fold_number} avg_loss': avg_loss.item(),
-            f'Fold {fold_number} avg_vloss': avg_vloss.item(),
+            f'Fold {fold_number} avg_train_loss': avg_loss.item(),
+            f'Fold {fold_number} avg_val_loss': avg_vloss.item(),
             f'Fold {fold_number} avg_train_kappa': avg_train_kappa,
             f'Fold {fold_number} avg_val_kappa': avg_val_kappa,
             f'Fold {fold_number} epoch': e
@@ -190,6 +191,25 @@ def train_folds():
         metrics = train(config['epochs'],model,device,train_loader,val_loader, criterion, optimizer, f_i+1) # Folds will be started from 1 instead of 0
         saved_metrics.append(metrics)
 
+    to_save_val_results=[]
+    all_fold_loss=[]
+    all_fold_kappa=[]
+    for cur_fold in range(len(saved_metrics)):
+        cur_fold_best_loss=1e10
+        cur_fold_best_kappa=0
+        for cur_fold_epoch in range(len(saved_metrics[cur_fold])):
+            if saved_metrics[cur_fold][cur_fold_epoch]['Fold '+str(cur_fold+1)+' avg_val_loss']<cur_fold_best_loss:
+                cur_fold_best_loss=saved_metrics[cur_fold][cur_fold_epoch]['Fold '+str(cur_fold+1)+' avg_val_loss']
+                cur_fold_best_kappa=saved_metrics[cur_fold][cur_fold_epoch]['Fold '+str(cur_fold+1)+' avg_val_kappa']
+        to_save_val_results.append([str(cur_fold+1),cur_fold_best_loss,cur_fold_best_kappa])
+        all_fold_loss.append(cur_fold_best_loss)
+        all_fold_kappa.append(cur_fold_best_kappa)
+    to_save_val_results.append(['mean',stat.mean(all_fold_loss),stat.mean(all_fold_kappa)])
+    to_save_val_results.append(['stdev',stat.stdev(all_fold_loss),stat.stdev(all_fold_kappa)])
+    columns=['Fold','Loss','Kappa']   
+    if config['wandb']==True:
+        val_table=wandb.Table(columns=columns,data=to_save_val_results)
+        wandb.log({"Val Table": val_table})
     plot_train_metrics(folds, saved_metrics, ex_directory)
     fp = os.path.join(ex_directory,"train_metrics.pkl")
     with open(fp, "wb") as file:
@@ -198,3 +218,5 @@ def train_folds():
 
 if __name__ == "__main__":
     train_folds()
+    if config['wandb']==True:
+        wandb.finish()
