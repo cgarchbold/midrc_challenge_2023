@@ -1,10 +1,10 @@
 config={
     'wandb': True,
-    'experiment_name': 'ResNet-50, Augment without cropping (Epoch=100)', # Must be an acceptable directory name!
-    'model':'ResNet-50',
+    'experiment_name': 'ResNet-18, No-Augment (50 epochs)', # Must be an acceptable directory name!
+    'model':'ResNet-18',
     'imgnet_pretrained':True,
-    'epochs':100,
-    'augment' : True, # True: Applies augmentations
+    'epochs':50,
+    'augment' : False, # True: Applies augmentations
     'cropping_augmentation':False, # True: Applies cropping augmentations, False: w/o cropping augmentations
     'batch_size': 16,
     'learning_rate': 0.001,

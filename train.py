@@ -168,6 +168,7 @@ def train_folds():
 
     saved_metrics = []
 
+    # train over all folds
     for f_i,fold in enumerate(folds):
         print("FOLD: ",f_i+1)
         train_list, val_list = fold
@@ -190,7 +191,9 @@ def train_folds():
         #Training per fold
         metrics = train(config['epochs'],model,device,train_loader,val_loader, criterion, optimizer, f_i+1) # Folds will be started from 1 instead of 0
         saved_metrics.append(metrics)
+    
 
+    # Save results to table in wandb
     to_save_val_results=[]
     all_fold_loss=[]
     all_fold_kappa=[]
@@ -210,6 +213,8 @@ def train_folds():
     if config['wandb']==True:
         val_table=wandb.Table(columns=columns,data=to_save_val_results)
         wandb.log({"Val Table": val_table})
+
+    #Save + plot train statistics
     plot_train_metrics(folds, saved_metrics, ex_directory)
     fp = os.path.join(ex_directory,"train_metrics.pkl")
     with open(fp, "wb") as file:
