@@ -28,3 +28,31 @@ def create_model(config):
                         torch.nn.Linear(256, 1, bias=True),
                         torch.nn.Sigmoid())
         return model
+    
+    if config['model']=='ViT-L-16':
+        if config['imgnet_pretrained']:
+            model =  torchvision.models.vit_l_16(weights='DEFAULT')
+        else:
+            model =  torchvision.models.vit_l_16()
+        # ViT model (1 channel input, Sigmoid Output)
+        model.conv_proj = torch.nn.Conv2d(1,1024, kernel_size=(16, 16), stride=(16, 16))
+        model.heads = torch.nn.Sequential(
+                        torch.nn.Linear(1024, 256, bias=True),
+                        torch.nn.Linear(256, 1, bias=True),
+                        torch.nn.Sigmoid())
+        return model
+    
+    if config['model']=='Swin-v2-b':
+        if config['imgnet_pretrained']:
+            model =  torchvision.models.swin_v2_b(weights='DEFAULT')
+        else:
+            model =  torchvision.models.swin_v2_b()
+        # ViT model (1 channel input, Sigmoid Output)
+        model.features[0][0] = torch.nn.Conv2d(1, 128, kernel_size=(4, 4), stride=(4, 4))
+        model.head = torch.nn.Sequential(
+                        torch.nn.Linear(1024, 256, bias=True),
+                        torch.nn.Linear(256, 1, bias=True),
+                        torch.nn.Sigmoid())
+        return model
+    
+    
