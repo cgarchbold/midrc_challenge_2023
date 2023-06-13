@@ -1,6 +1,6 @@
 config={
     'wandb': True,
-    'experiment_name': 'ResNet-50, Augment without cropping (Epoch=100), cos scheduler + adamw', # Must be an acceptable directory name!
+    'experiment_name': 'ResNet-50, NEW Augment without cropping (Epoch=100), cos scheduler + adamw', # Must be an acceptable directory name!
     'model':'ResNet-50',
     'imgnet_pretrained':True,
     'epochs':100,

@@ -152,13 +152,20 @@ def train_folds():
                 transforms.RandomRotation(20),                           # Randomly rotate the image within -20 to +20 degrees
                 transforms.RandomResizedCrop(size=224, scale=(0.8, 1.0)),# Randomly crop and resize the image to 224x224 pixels
                 transforms.RandomHorizontalFlip(0.1),                       # Randomly flip the image horizontally
+
                 transforms.ToTensor()
             ])
         elif config['cropping_augmentation']==False:
             transform = transforms.Compose([
                 transforms.RandomRotation(20),                           # Randomly rotate the image within -20 to +20 degrees
                 transforms.RandomHorizontalFlip(0.1),                       # Randomly flip the image horizontally
-                transforms.ToTensor()
+                #transforms.RandomAffine(180, (0.5, 0.5), scale=(0.4, 1), shear=45),
+                transforms.RandomApply([transforms.GaussianBlur(kernel_size=3)], p=0.2),
+                transforms.RandomAdjustSharpness(1.5, p=0.2),
+                transforms.ToTensor(),
+                transforms.RandomApply([transforms.ColorJitter(brightness=0.2, contrast=0.2)], p=0.5),
+                #transforms.ColorJitter(20, 0.2, 20, 0.5)
+                # Could also do random affine transform, instead of these others
             ])
     else:
         transform = transforms.Compose([
