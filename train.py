@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader
 import pickle
 import wandb
 import statistics as stat
+from utility import get_scheduler
 
 '''
     Train on 1 fold (1 dataset) with the input settings
@@ -18,7 +19,7 @@ import statistics as stat
     Returns: dict of training metrics
              best validation model is saved to \models
 '''
-def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, fold_number):
+def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, scheduler, fold_number):
     metrics={}
     best_vloss = 1_000_000.
     for e in range(epochs):
@@ -62,7 +63,7 @@ def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, f
         
         avg_loss = running_loss/(i+1)
         avg_train_kappa=running_train_kappa/(i+1)
-
+        scheduler.step() # Decreasing/Increasing the LR based on scheduler for each epoch during training
         
         running_vloss = 0.0
         running_kappa = 0.0
@@ -177,6 +178,7 @@ def train_folds():
 
         # TODO: Choose optimizer in config
         optimizer = torch.optim.Adam(model.parameters(), lr = config['learning_rate'])
+        scheduler= get_scheduler(config=config, optimizer_ft=optimizer)
 
         # TODO: Choose loss in config
         criterion = torch.nn.MSELoss()
@@ -188,7 +190,7 @@ def train_folds():
         val_loader = DataLoader(val_dataset, batch_size = config['batch_size'], shuffle=True)
 
         #Training per fold
-        metrics = train(config['epochs'],model,device,train_loader,val_loader, criterion, optimizer, f_i+1) # Folds will be started from 1 instead of 0
+        metrics = train(config['epochs'],model,device,train_loader,val_loader, criterion, optimizer,scheduler=scheduler, fold_number=f_i+1) # Folds will be started from 1 instead of 0
         saved_metrics.append(metrics)
 
     to_save_val_results=[]
