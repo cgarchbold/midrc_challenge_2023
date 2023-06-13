@@ -178,8 +178,13 @@ def train_folds():
         model.to(device)
 
         # TODO: Choose optimizer in config
-        optimizer = torch.optim.Adam(model.parameters(), lr = config['learning_rate'])
+        if config['optim'] == 'adamw':
+            optimizer = torch.optim.AdamW(model.parameters(), lr = config['learning_rate'])
+        else:
+            optimizer = torch.optim.Adam(model.parameters(), lr = config['learning_rate'])
+        
         scheduler= get_scheduler(config=config, optimizer_ft=optimizer)
+    
 
         # TODO: Choose loss in config
         criterion = torch.nn.MSELoss()
