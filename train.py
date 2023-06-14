@@ -126,7 +126,7 @@ def train_folds():
         config=config
     )
 
-    folds = cross_fold.create_folded_datasets("../data/resized_224X224/label_info/labels.json")
+    folds = cross_fold.create_folded_datasets("../data/label_info/labels.json")
 
     root_dir = config['root_dir']
 

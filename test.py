@@ -49,7 +49,7 @@ def test(model,device,dataloader):
     
 def test_folds():
 
-    folds = cross_fold.create_folded_datasets("../data/resized_224X224/label_info/labels.json") #TODO: define in config
+    folds = cross_fold.create_folded_datasets("../data/label_info/labels.json") #TODO: define in config
 
     root_dir = config['root_dir']
 
