@@ -88,6 +88,7 @@ class midrc_SIMCLR_dataset():
     def __init__(self, root_dir, annotations_file,json_file, transform = None):
 
         self.root_dir = root_dir
+        self.data_dir = os.path.join(root_dir,'data').replace("\\","/")
         self.transform = transform
         self.annotations = pd.read_csv(annotations_file)
 
@@ -108,9 +109,9 @@ class midrc_SIMCLR_dataset():
         # each item in the dictionary contains a list of dictionaries
         dict = self.label_info[idx]
 
-        img_fp = os.path.join(self.root_dir, dict['full_image_name'])
+        img_fp = os.path.join(self.data_dir, dict['full_image_name']).replace("\\","/")
         rand_select = random.choice(dict[self.list_key])
-        img2_fp = os.path.join(self.data_dir, rand_select)
+        img2_fp = os.path.join(self.data_dir, rand_select).replace("\\","/")
 
         fn, ext = os.path.splitext(os.path.basename(img_fp))
         pid, studyid, seriesid, sopid  = fn.split('_')
