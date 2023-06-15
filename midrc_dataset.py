@@ -85,7 +85,7 @@ class midrc_challenge_dicom(Dataset):
 class midrc_SIMCLR_dataset():
     # Implementing a class for a json defined version of a simclr pretraining input scheme
 
-    def __init__(self, root_dir, annotations_file,json_file, transform = None):
+    def __init__(self, root_dir, annotations_file,json_file, fp_list = None, transform = None):
 
         self.root_dir = root_dir
         self.data_dir = os.path.join(root_dir,'data').replace("\\","/")
@@ -95,6 +95,16 @@ class midrc_SIMCLR_dataset():
         with open(json_file,"r") as label_info:
             self.label_info=json.load(label_info)
 
+        # TODO: Filter filenames
+
+        if fp_list is not None:
+            self.label_info = [i for i in self.label_info if (i['full_image_name'] in fp_list)]
+            #for i in range(len(self.label_info)):
+            #    print(self.label_info[i])
+            #    if self.label_info[i]['full_image_name'] not in fp_list:
+            #        del self.label_info[i]
+                
+
         if "patient_wise" in json_file:
             self.list_key = 'same_patient_images'
         else:
@@ -103,7 +113,7 @@ class midrc_SIMCLR_dataset():
         #self.file_dict = []
 
     def __len__(self):
-        len(self.label_info)
+        return len(self.label_info)
 
     def __getitem__(self, idx):
         # each item in the dictionary contains a list of dictionaries
