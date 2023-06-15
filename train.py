@@ -1,7 +1,7 @@
 import torch
 import os
 import cross_fold
-from get_model import create_model, make_contrastive_pretrained_model
+from get_model import create_model, load_contrastive_pretrained_model
 from sklearn.metrics import cohen_kappa_score
 from midrc_dataset import midrc_challenge_dataset
 from config import config
@@ -176,9 +176,7 @@ def train_folds():
 
         
         if config['contrastive_pretraining']:
-            model = make_contrastive_pretrained_model(config=config, fold_number)
-            
-
+            model = load_contrastive_pretrained_model(config=config, fold_number=f_i+1)
         else:
             model = create_model(config=config)
         model.to(device)

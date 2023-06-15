@@ -55,14 +55,14 @@ def create_model(config):
                         torch.nn.Sigmoid())
         return model
     
-def load_contrastive_pretrained_model(config, f_number):
+def load_contrastive_pretrained_model(config, fold_number):
         if config['model']=='ResNet-50':
             model = torchvision.models.resnet50(weights='ResNet50_Weights.DEFAULT')
             model.conv1 = torch.nn.Conv2d(1,64, kernel_size=(7,7),stride=(2,2),padding=(3,3), bias=False)
             model.fc = torch.nn.Sequential(
                         torch.nn.Linear(2048, 512, bias=True),
                         torch.nn.Linear(512, 256, bias=True))
-            model.load('./experiments/MIDRC Contrastive Pretraining Per Fold/saved_models/modelsave_fold_'+str(f_number))
+            model.load_state_dict(torch.load('./experiments/MIDRC Contrastive Pretraining Per Fold/saved_models/modelsave_fold_'+str(fold_number)+".ckpt"))
             model.fc = torch.nn.Sequential(
                     torch.nn.Linear(2048, 512, bias=True),
                     torch.nn.Linear(512, 256, bias=True),
