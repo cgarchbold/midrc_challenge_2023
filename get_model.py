@@ -62,7 +62,7 @@ def load_contrastive_pretrained_model(config, fold_number):
             model.fc = torch.nn.Sequential(
                         torch.nn.Linear(2048, 512, bias=True),
                         torch.nn.Linear(512, 256, bias=True))
-            model.load_state_dict(torch.load('./experiments/MIDRC Contrastive Pretraining Per Fold/saved_models/modelsave_fold_'+str(fold_number)+".ckpt"))
+            model.load_state_dict(torch.load('./experiments/ResNet-50 Contrastive Pretraining Per Fold/saved_models/modelsave_fold_'+str(fold_number)+".ckpt"))
             model.fc = torch.nn.Sequential(
                     torch.nn.Linear(2048, 512, bias=True),
                     torch.nn.Linear(512, 256, bias=True),
