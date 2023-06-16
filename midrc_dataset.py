@@ -95,22 +95,15 @@ class midrc_SIMCLR_dataset():
         with open(json_file,"r") as label_info:
             self.label_info=json.load(label_info)
 
-        # TODO: Filter filenames
-
+        # Check for validation / training split
         if fp_list is not None:
             self.label_info = [i for i in self.label_info if (i['full_image_name'] in fp_list)]
-            #for i in range(len(self.label_info)):
-            #    print(self.label_info[i])
-            #    if self.label_info[i]['full_image_name'] not in fp_list:
-            #        del self.label_info[i]
-                
-
+        
         if "patient_wise" in json_file:
             self.list_key = 'same_patient_images'
         else:
             self.list_key = 'same_study_images'
-        # TODO: Instead load the files from the jsons
-        #self.file_dict = []
+    
 
     def __len__(self):
         return len(self.label_info)
@@ -137,6 +130,6 @@ class midrc_SIMCLR_dataset():
         # TODO: Apply same transform to both images in case of random transformation
         if self.transform:
             img1 = self.transform(img1)
-            img2 = self.transform(img2) # Will need to atleast apply PILToTensor()
+            img2 = self.transform(img2) # Will need to atleast apply ToTensor()
 
         return img1, img2, score_1, score_2

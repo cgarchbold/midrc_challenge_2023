@@ -1,17 +1,18 @@
 import torch
 import os
 import cross_fold
-from get_model import create_model, load_contrastive_pretrained_model
 from sklearn.metrics import cohen_kappa_score
 from midrc_dataset import midrc_challenge_dataset
-from config import config
 from plotting import plot_train_metrics
+
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import pickle
 import wandb
 import statistics as stat
 from utility import get_scheduler
+from config import config
+from get_model import create_model, load_contrastive_pretrained_model
 
 '''
     Train on 1 fold (1 dataset) with the input settings
@@ -177,6 +178,11 @@ def train_folds():
         
         if config['contrastive_pretraining']:
             model = load_contrastive_pretrained_model(config=config, fold_number=f_i+1)
+            if config['model_freezing']==1:
+                for param in model.parameters():
+                    param.requires_grad = False
+                for param in model.fc.parameters():
+                    param.requires_grad = True
         else:
             model = create_model(config=config)
         model.to(device)
