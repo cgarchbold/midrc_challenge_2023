@@ -12,8 +12,7 @@ def create_model(config):
             model.fc=torch.nn.Sequential(
                     torch.nn.Linear(2048, 512, bias=True),
                     torch.nn.Linear(512, 256, bias=True),
-                    torch.nn.Linear(256, 1, bias = True),
-                    torch.nn.Sigmoid())
+                    torch.nn.Linear(256, 1, bias = True))
             return model
         elif config['imgnet_pretrained']==False:
             model =  torchvision.models.resnet50()
@@ -38,6 +37,15 @@ def create_model(config):
                         torch.nn.Linear(256, 1, bias=True),
                         torch.nn.Sigmoid())
         return model
+    if config['model']=='DenseNet-121':
+        if config['torchxrayvision_pretrained']==True:
+            model=xrv.models.DenseNet(weights="densenet121-res224-all")
+            model.classifier=torch.nn.Sequential(
+                        torch.nn.Linear(1024, 256, bias=True),
+                        torch.nn.Linear(256, 1, bias=True),
+                        torch.nn.Sigmoid())
+            return model
+
     
     if config['model']=='ViT-L-16':
         if config['imgnet_pretrained']:

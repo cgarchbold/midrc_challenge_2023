@@ -1,6 +1,6 @@
 config={
     'wandb': True,
-    'experiment_name': 'TorchXrayVision Pretrained, ResNet-50', # Must be an acceptable directory name!
+    'experiment_name': 'TorchXrayVision Pretrained, ResNet-50, without sigmoid', # Must be an acceptable directory name!
     'model':'ResNet-50',
     'imgnet_pretrained':False,
     'contrastive_pretraining':False,

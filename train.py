@@ -174,7 +174,6 @@ def train_folds():
     for f_i,fold in enumerate(folds):
         print("FOLD: ",f_i+1)
         train_list, val_list = fold
-
         
         if config['contrastive_pretraining']:
             model = load_contrastive_pretrained_model(config=config, fold_number=f_i+1)
