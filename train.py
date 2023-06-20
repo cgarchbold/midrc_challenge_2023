@@ -40,7 +40,8 @@ def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, s
 
             # Make predictions for this batch
             outputs = model(inputs.to(device))
-            labels=labels/24.0
+            if config['normalized_output']==True:
+                labels=labels/24.0
 
             # Compute the loss and its gradients
             loss = criterion(outputs, labels.float().to(device).unsqueeze(1))
@@ -48,8 +49,9 @@ def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, s
 
             # Adjust learning weights
             optimizer.step()
-            outputs=outputs*24.0
-            labels=labels*24.0
+            if config['normalized_output']==True:
+                outputs=outputs*24.0
+                labels=labels*24.0
             
             outputs=torch.round(outputs)
             outputs=outputs.data.cpu().numpy()
@@ -73,10 +75,12 @@ def train(epochs,model,device, train_loader, val_loader, criterion, optimizer, s
             for i, vdata in enumerate(val_loader):
                 vinputs, vlabels = vdata
                 voutputs = model(vinputs.to(device))
-                vlabels=vlabels/24.0
+                if config['normalized_output']==True:
+                    vlabels=vlabels/24.0
                 vloss = criterion(voutputs, vlabels.float().to(device).unsqueeze(1))
-                voutputs=voutputs*24.0
-                vlabels=vlabels*24.0
+                if config['normalized_output']==True:
+                    voutputs=voutputs*24.0
+                    vlabels=vlabels*24.0
                 voutputs=torch.round(voutputs)
                 voutputs=voutputs.data.cpu().numpy()
                 vlabels=vlabels.data.cpu().numpy()

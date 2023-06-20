@@ -1,6 +1,6 @@
 config={
     'wandb': True,
-    'experiment_name': 'TorchXrayVision Pretrained, ResNet-50, without sigmoid', # Must be an acceptable directory name!
+    'experiment_name': 'XRV Pretrained, ResNet-50, full range', # Must be an acceptable directory name!
     'model':'ResNet-50',
     'imgnet_pretrained':False,
     'contrastive_pretraining':False,
@@ -14,6 +14,7 @@ config={
     'scheduler':'cos',
     'scheduler_warmup':1,
     'optim': 'adamw',
+    'normalized_output':False, # True: model's prediction will be in the range of [0,1], False: model's prediction will be in the range of [0,24]
     'root_dir': '../data/resized_512X512',
     'annotations_path': 'MIDRC mRALE Mastermind Training Annotations_2079_20230428.csv'
 }
