@@ -39,11 +39,13 @@ def create_model(config):
         return model
     if config['model']=='DenseNet-121':
         if config['torchxrayvision_pretrained']==True:
+            print("Taking DenseNet-121 from XRV")
             model=xrv.models.DenseNet(weights="densenet121-res224-all")
             model.classifier=torch.nn.Sequential(
                         torch.nn.Linear(1024, 256, bias=True),
                         torch.nn.Linear(256, 1, bias=True),
                         torch.nn.Sigmoid())
+            model.op_threshs=None
             return model
 
     
