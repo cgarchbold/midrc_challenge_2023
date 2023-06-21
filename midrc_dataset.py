@@ -27,7 +27,9 @@ class midrc_challenge_dataset(Dataset):
 
         self.file_paths = []
         for image_name in os.listdir(self.data_dir):
-            if image_name in fp_list:
+            if fp_list is None:
+                self.file_paths.append(os.path.join(self.data_dir, image_name))
+            elif image_name in fp_list:
                 self.file_paths.append(os.path.join(self.data_dir, image_name))
             
         
