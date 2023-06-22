@@ -74,6 +74,17 @@ def create_model(config):
                         torch.nn.Linear(256, 1, bias=True),
                         torch.nn.Sigmoid())
         return model
+    if config["model"]=="effnetv2l":
+        print("EfficientNet-V2(L)")
+        model=torchvision.models.efficientnet_v2_l(pretrained=config['imgnet_pretrained'])
+        model.features[0][0]=torch.nn.Conv2d(in_channels=1,out_channels=32, kernel_size=(3,3),stride=(2,2),padding=(1,1),bias=False)
+        num_ftrs=model.classifier[1].in_features 
+        model.classifier[1] = torch.nn.Sequential(
+                    torch.nn.Linear(num_ftrs, 256, bias=True),
+                    torch.nn.Linear(256, 1, bias=True),
+                    torch.nn.Sigmoid())
+        return model
+         
     
 def load_contrastive_pretrained_model(config, fold_number):
         if config['model']=='ResNet-50':

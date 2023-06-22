@@ -1,15 +1,15 @@
 config={
     'wandb': True,
-    'experiment_name': 'XRV Pretrained, DenseNet-121, Normalized sigmoid', # Must be an acceptable directory name!
-    'model':'DenseNet-121',
-    'imgnet_pretrained':False,
+    'experiment_name': 'EfficientNet-V2(L), Normalized sigmoid', # Must be an acceptable directory name!
+    'model':'effnetv2l',
+    'imgnet_pretrained':True,
     'contrastive_pretraining':False,
     'model_freezing': -1, # Freezing techniques (#-1:None , #1: fc trainable,  )
     'epochs':100,
     'augment' : True, # True: Applies augmentations
     'cropping_augmentation':False, # True: Applies cropping augmentations, False: w/o cropping augmentations
     'batch_size': 8,
-    'torchxrayvision_pretrained':True,
+    'torchxrayvision_pretrained':False,
     'learning_rate': 0.001,
     'scheduler':'cos',
     'scheduler_warmup':1,
